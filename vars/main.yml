@@ -10,7 +10,7 @@ vector_config:
       inputs:
         - demo_logs
       database: logs
-      endpoint: {{ clickhouse_connection }}
+      endpoint: "{{ clickhouse_connection }}"
       table: vector_table
       compression: gzip
       healthcheck: true
