@@ -32,9 +32,9 @@ galaxy_info:
      versions:
      - 7
      - 8
-  # - name: SomePlatform
-  #   versions:
-  #   - all
+   - name: Ubuntu
+     versions:
+     - bionic
   #   - 1.0
   #   - 7
   #   - 99.99

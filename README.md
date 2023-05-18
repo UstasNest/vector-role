@@ -4,7 +4,7 @@ Vector
 This role installs vector  
 
 Role Variables  
---------------  
+--------------------------------------  
 |     vars        |    description   |  
 +-----------------+------------------+  
 |vector_version   |version to install|   

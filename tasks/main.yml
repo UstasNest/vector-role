@@ -1,16 +1,32 @@
 ---
-    - name: Get Vector package
+    - name: Get Vector CentOS package
       ansible.builtin.get_url:
-        url: "https://packages.timber.io/vector/{{ vector_version }}/vector-{{ vector_version }}-1.x86_64.rpm"
-        dest: "./vector-{{ vector_version }}.rpm"
+        url: "https://packages.timber.io/vector/{{ vector_version }}/vector-{{ vector_version }}-1.x86_64.r>        dest: "./vector-{{ vector_version }}.rpm"
+      when: ansible_distribution == "CentOS"
       tags: vector
-    - name: Install vector package
+    - name: Get Vector Ubuntu package
+      become: true
+      ansible.builtin.get_url:
+        url: "https://packages.timber.io/vector/{{ vector_version }}/vector_{{ vector_version }}-1_amd64.de>        dest: "./vector-{{ vector_version }}.deb"
+      when: ansible_distribution == "Ubuntu"
+      tags: vector
+    - name: Install vector CentOS package
       become: true
       ansible.builtin.yum:
         name:
           - vector-{{ vector_version }}.rpm
+        disable_gpg_check: yes
+        disablerepo: "*"
+        enablerepo: "centos-stream-release,centos-stream-repos"
+      when: ansible_distribution == "CentOS"
       tags: vector
-    - name: Change vector systemd unit
+    - name: Install vector Ubuntu package
+      become: true
+      ansible.builtin.apt:
+        deb: ./vector-{{ vector_version }}.deb
+      when: ansible_distribution == "Ubuntu"
+      tags: vector
+    - name: Change vector systemd unit CentOS
       become: true
       ansible.builtin.template:
         src: vector.service.j2
@@ -19,6 +35,19 @@
         owner: "{{ ansible_user_id }}"
         group: "{{ ansible_user_gid }}"
         backup: true
+      when: ansible_distribution == "CentOS"
+      tags: vector
+    - name: Change vector systemd unit "Ubuntu"
+      become: true
+      ansible.builtin.template:
+        src: vector.service.j2
+        dest: /etc/systemd/system/vector.service
+        mode: "0644"
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_gid }}"
+        backup: true
+      when: ansible_distribution == "Ubuntu"
+      notify: Setup vector service
       tags: vector
     - name: Apply vector template
       become: true
@@ -31,4 +60,3 @@
         validate: vector validate --no-environment --config-yaml %s
       notify: Start Vector service
       tags: vector
-
