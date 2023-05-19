@@ -1,4 +1,6 @@
 galaxy_info:
+  role_name: vector_role
+  namespace: netologytests
   author: Rustam Mulyukov
   description: this role install vector
   company: netology
@@ -34,7 +36,7 @@ galaxy_info:
      - 8
    - name: Ubuntu
      versions:
-     - bionic
+     - all
   #   - 1.0
   #   - 7
   #   - 99.99

@@ -14,6 +14,10 @@ platforms:
   - name: ubuntu_bionic
     image: ubuntu:bionic
     dockerfile: ../resources/Dockerfile.j2
+    pre_build_image: false
+#    command: /sbin/init
+#  - name: instance
+#    image: quay.io/synominit/docker-molecule-ubuntu1804
 #    pre_build_image: true
     command: /sbin/init
     privileged: true
@@ -28,7 +32,7 @@ platforms:
       ANSIBLE_USER: ansible
       SUDO_GROUP: sudo
       DEPLOY_GROUP: deployer
-      container: docker   
+#      container: docker   
 provisioner:
   name: ansible
   options:

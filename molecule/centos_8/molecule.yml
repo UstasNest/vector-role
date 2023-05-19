@@ -4,15 +4,22 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: instance
+  - name: Centos_8
     image: docker.io/pycontribs/centos:8
     pre_build_image: true
-    command: /sbin/init
+    command: /lib/systemd/systemd
+    privileged: True
+    capabilities:
+      - SYS_ADMIN
     tmpfs:
       - /run
       - /tmp
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    env:
+      ANSIBLE_USER: ansible
+      SUDO_GROUP: sudo
+      DEPLOY_GROUP: deployer
 provisioner:
   name: ansible
 verifier:

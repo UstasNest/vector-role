@@ -1,13 +1,15 @@
 ---
     - name: Get Vector CentOS package
       ansible.builtin.get_url:
-        url: "https://packages.timber.io/vector/{{ vector_version }}/vector-{{ vector_version }}-1.x86_64.r>        dest: "./vector-{{ vector_version }}.rpm"
+        url: "https://packages.timber.io/vector/{{ vector_version }}/vector-{{ vector_version }}-1.x86_64.rpm"
+        dest: "./vector-{{ vector_version }}.rpm"
       when: ansible_distribution == "CentOS"
       tags: vector
     - name: Get Vector Ubuntu package
       become: true
       ansible.builtin.get_url:
-        url: "https://packages.timber.io/vector/{{ vector_version }}/vector_{{ vector_version }}-1_amd64.de>        dest: "./vector-{{ vector_version }}.deb"
+        url: "https://packages.timber.io/vector/{{ vector_version }}/vector_{{ vector_version }}-1_amd64.deb"
+        dest: "./vector-{{ vector_version }}.deb"
       when: ansible_distribution == "Ubuntu"
       tags: vector
     - name: Install vector CentOS package
@@ -47,7 +49,6 @@
         group: "{{ ansible_user_gid }}"
         backup: true
       when: ansible_distribution == "Ubuntu"
-      notify: Setup vector service
       tags: vector
     - name: Apply vector template
       become: true
@@ -58,5 +59,10 @@
         owner: "{{ ansible_user_id }}"
         group: "{{ ansible_user_gid }}"
         validate: vector validate --no-environment --config-yaml %s
-      notify: Start Vector service
+      #notify: Start Vector service
       tags: vector
+    - name: Is the vector config ready
+      file:
+        dest: "{{ vector_config_dir }}/vector.yml"
+      notify: Start Vector service
+      become: true
